@@ -1,0 +1,63 @@
+doctrine:
+    dbal:
+        default_connection: default
+        types:
+            jsonb: MartinGeorgiev\Doctrine\DBAL\Types\Jsonb
+        connections:
+            default:
+                url: '%env(resolve:DATABASE_URL)%'
+                driver: 'pdo_pgsql'
+                server_version: '13.2'
+                mapping_types:
+                    jsonb: jsonb
+    orm:
+        auto_generate_proxy_classes: true
+        default_entity_manager: default
+        entity_managers:
+            default:
+                connection: default
+                naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+                mappings:
+                    App\User:
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/User/Entity'
+                        prefix: 'App\User\Entity'
+                        alias: App
+                    App\Auth:
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Auth/Entity'
+                        prefix: 'App\Auth\Entity'
+                        alias: App
+                    App\Post:
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Post/Entity'
+                        prefix: 'App\Post\Entity'
+                        alias: App
+                    App\Main:
+                        type: annotation
+                        dir: '%kernel.project_dir%/src/Main/Entity'
+                        prefix: 'App\Main\Entity'
+                        alias: App
+                    loggable:
+                        type: annotation
+                        alias: Gedmo
+                        prefix: Gedmo\Loggable\Entity
+                        is_bundle: false
+                        dir: "%kernel.project_dir%/vendor/gedmo/doctrine-extensions/src/Loggable/Entity"
+                dql:
+                    datetime_functions:
+                        second: DoctrineExtensions\Query\Postgresql\Second
+                        minute: DoctrineExtensions\Query\Postgresql\Minute
+                        hour: DoctrineExtensions\Query\Postgresql\Hour
+                        day: DoctrineExtensions\Query\Postgresql\Day
+                        month: DoctrineExtensions\Query\Postgresql\Month
+                        year: DoctrineExtensions\Query\Postgresql\Year
+                        date_format: DoctrineExtensions\Query\Postgresql\DateFormat
+                        at_time_zone: DoctrineExtensions\Query\Postgresql\AtTimeZoneFunction
+                        date_part: DoctrineExtensions\Query\Postgresql\DatePart
+                        extract: DoctrineExtensions\Query\Postgresql\ExtractFunction
+                        date_trunc: DoctrineExtensions\Query\Postgresql\DateTrunc
+                        date: DoctrineExtensions\Query\Postgresql\Date
+                    string_functions:
+                        jsonb_exists: MartinGeorgiev\Doctrine\ORM\Query\AST\Functions\JsonbExists
+                        jsonb_array_length: MartinGeorgiev\Doctrine\ORM\Query\AST\Functions\JsonbArrayLength

@@ -1,0 +1,52 @@
+FROM php:8.0-cli
+
+RUN apt-get update --fix-missing \
+    && apt-get install -y zsh \
+    git \
+    libpq-dev \
+    vim \
+    sed \
+    zip
+
+RUN pecl install xdebug && \
+    docker-php-ext-configure pgsql -with-pgsql=/usr/local/pgsql && \
+    docker-php-ext-install -j$(nproc) pdo_pgsql && \
+    docker-php-ext-enable xdebug
+
+COPY ./php-cli/default.ini /usr/local/etc/php/conf.d/default.ini
+
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
+# Zsh is the default shell
+RUN curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | zsh || true
+COPY ./php-cli/.zshrc /root/.zshrc
+RUN chsh -s /bin/zsh
+
+# intl
+RUN apt-get update \
+    && apt-get install -y libicu-dev \
+    && docker-php-ext-install intl \
+    && docker-php-ext-enable intl
+
+# xsl
+RUN apt-get update \
+    && apt-get install -y libxslt-dev \
+    && docker-php-ext-install xsl
+
+# wkhtmltopdf
+RUN apt-get update \
+    && apt-get install -y wkhtmltopdf
+
+RUN apt-get install --yes \
+    gcc \
+    g++ \
+    make \
+    supervisor \
+    librabbitmq-dev \
+    telnet
+
+RUN pecl install https://github.com/0x450x6c/php-amqp/raw/7323b3c9cc2bcb8343de9bb3c2f31f6efbc8894b/amqp-1.10.3.tgz
+
+WORKDIR /app

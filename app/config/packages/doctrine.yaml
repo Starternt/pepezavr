@@ -33,10 +33,10 @@ doctrine:
                         dir: '%kernel.project_dir%/src/Post/Entity'
                         prefix: 'App\Post\Entity'
                         alias: App
-                    App\Main:
+                    App\File:
                         type: annotation
-                        dir: '%kernel.project_dir%/src/Main/Entity'
-                        prefix: 'App\Main\Entity'
+                        dir: '%kernel.project_dir%/src/File/Entity'
+                        prefix: 'App\File\Entity'
                         alias: App
                     loggable:
                         type: annotation

@@ -197,6 +197,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
         // we need to make sure to have at least one role
         $roles[] = self::ROLE_DEFAULT;
+        $roles[] = self::ROLE_ACTIVE;
 
         return array_unique($roles);
     }

@@ -29,12 +29,12 @@ doctrine:
                         prefix: 'App\Auth\Entity'
                         alias: App
                     App\Post:
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/Post/Entity'
                         prefix: 'App\Post\Entity'
                         alias: App
                     App\File:
-                        type: annotation
+                        type: attribute
                         dir: '%kernel.project_dir%/src/File/Entity'
                         prefix: 'App\File\Entity'
                         alias: App

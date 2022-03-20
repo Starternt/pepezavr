@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace App\User\Entity;
 
-use ApiPlatform\Core\Annotation\ApiResource;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\User\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -14,9 +12,16 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\PasswordHasher\Hasher\PasswordHasherAwareInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
-use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @ORM\Table(
+ *     name="users"
+ * )
+ * @ORM\Entity(repositoryClass=UserRepository::class)
+ * @UniqueEntity("username")
+ * @Gedmo\SoftDeleteable(fieldName="deletedAt")
+ */
 class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInterface, UserInterface
 {
     use SoftDeleteableEntity;
@@ -25,31 +30,9 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     public const ROLE_ACTIVE = 'ROLE_ACTIVE_USER';
 
-    public const ROLE_ASUPG = 'ROLE_ASUPG';
-
     public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
-
-    public const ROLE_RMP_USER = 'ROLE_RMP_USER';
-
-    public const ROLE_RMP_USER_SMR = 'ROLE_RMP_USER_SMR';
-
-    public const ROLE_RMP_USER_ZPR = 'ROLE_RMP_USER_ZPR';
-
-    public const ROLE_RMP_BUILD_CONTROL = 'ROLE_RMP_BUILD_CONTROL';
-
-    public const ROLE_RMP_CURATOR = 'ROLE_RMP_CURATOR';
-
-    public const ROLES = [
-        self::ROLE_ADMIN => 'Администратор',
-        self::ROLE_RMP_USER => 'Подрядчик',
-        self::ROLE_RMP_USER_SMR => 'CMР',
-        self::ROLE_RMP_USER_ZPR => 'ПИР',
-        self::ROLE_RMP_BUILD_CONTROL => 'Стройконтроль',
-        self::ROLE_RMP_CURATOR => 'Куратор',
-        self::ROLE_ASUPG => 'Потребитель',
-    ];
 
     public const HASHING_ALGORITHM_ARGON2I = 'argon2i';
 
@@ -59,25 +42,23 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     public const STATUS_NEW = 'new';
     public const STATUS_ACTIVE = 'active';
-    public const STATUS_FUNCTIONAL = 'functional';
     public const STATUS_DELETED = 'deleted';
     public const STATUS_BLOCKED = 'blocked';
 
-    public const STATUSES = [
-        self::STATUS_NEW => 'Новый',
-        self::STATUS_ACTIVE => 'Активный',
-        self::STATUS_FUNCTIONAL => 'Действующий',
-        self::STATUS_DELETED => 'Удаленный',
-        self::STATUS_BLOCKED => 'Заблокированный',
-    ];
+    public const STATUSES
+        = [
+            self::STATUS_NEW     => 'New',
+            self::STATUS_ACTIVE  => 'Active',
+            self::STATUS_DELETED => 'Deleted',
+            self::STATUS_BLOCKED => 'Blocked',
+        ];
 
-    public const GROUP_SUTP_READ = 'users:sutp_read';
-
-    private const VALID_HASHING_ALGORITHMS = [
-        self::HASHING_ALGORITHM_MD5,
-        self::HASHING_ALGORITHM_ARGON2I,
-        self::HASHING_ALGORITHM_BCRYPT,
-    ];
+    private const VALID_HASHING_ALGORITHMS
+        = [
+            self::HASHING_ALGORITHM_MD5,
+            self::HASHING_ALGORITHM_ARGON2I,
+            self::HASHING_ALGORITHM_BCRYPT,
+        ];
 
     /**
      * @ORM\Id
@@ -106,11 +87,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     private array $roles = [];
 
     /**
-     * @ORM\Column(type="boolean")
-     */
-    private bool $enabled = true;
-
-    /**
      * Encrypted password. Must be persisted.
      *
      * @ORM\Column(type="string")
@@ -129,11 +105,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
      * @Assert\NotBlank()
      */
     private ?string $name;
-
-    /**
-     * @ORM\OneToMany(targetEntity="UserOrganization", mappedBy="user", cascade={"persist"}, orphanRemoval=true)
-     */
-    private Collection $userOrganizations;
 
     /**
      * @ORM\Column(name="registered_at", type="datetime")
@@ -163,33 +134,20 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     private bool $confirmed = false;
 
     /**
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private ?bool $isAsupgDataRequested = false;
-
-    /**
      * @ORM\Column(type="string", options={"default"=self::STATUS_NEW})
      */
-    #[Groups([self::GROUP_SUTP_READ])]
     private string $status = self::STATUS_NEW;
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Main\Entity\FileCollection", mappedBy="user", fetch="EXTRA_LAZY")
-     */
-    private Collection $fileCollections;
 
     public function __construct()
     {
-        $this->userOrganizations = new ArrayCollection();
         $this->hashingAlgorithm = self::HASHING_ALGORITHM_ARGON2I;
         $this->name = null;
         $this->registeredAt = new \DateTime();
-        $this->fileCollections = new ArrayCollection();
     }
 
     public function __toString(): string
     {
-        return sprintf('%s (%s)', (string) $this->name, $this->username);
+        return sprintf('%s (%s)', $this->name, $this->username);
     }
 
     public function getId(): ?int
@@ -197,9 +155,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
         return $this->id;
     }
 
-    /**
-     * @return $this
-     */
     public function setEmail(string $email): self
     {
         $this->email = $email;
@@ -242,10 +197,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
         // we need to make sure to have at least one role
         $roles[] = self::ROLE_DEFAULT;
-
-        if ($this->isEnabled()) {
-            $roles[] = self::ROLE_ACTIVE;
-        }
 
         return array_unique($roles);
     }
@@ -308,21 +259,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
         return $this;
     }
 
-    public function isEnabled(): bool
-    {
-        if ($this->isDeleted()) {
-            return false;
-        }
-
-        return $this->enabled;
-    }
-
-    public function setEnabled(bool $enabled): self
-    {
-        $this->enabled = $enabled;
-
-        return $this;
-    }
 
     public function setName(?string $name): self
     {
@@ -334,11 +270,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     public function getName(): ?string
     {
         return $this->name;
-    }
-
-    public function getStatusTitle(): string
-    {
-        return self::STATUSES[$this->getStatus()] ?? '';
     }
 
     public function setRegisteredAt(\DateTimeInterface $registeredAt): self
@@ -433,43 +364,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
         $this->confirmed = $confirmed;
 
         return $this;
-    }
-
-    public function getRolesCaption(string $separator = ', '): string
-    {
-        $titles = array_filter(
-            array_map(function (string $role) {
-                if (self::ROLE_DEFAULT === $role) {
-                    return null;
-                }
-
-                return self::ROLES[$role] ?? $role;
-            }, $this->getRoles())
-        );
-
-        return implode($separator, $titles);
-    }
-
-    public function getEventsLogs(): Collection
-    {
-        return $this->eventsLogs;
-    }
-
-    public function setEventsLogs(ArrayCollection|Collection $eventsLogs): static
-    {
-        $this->eventsLogs = $eventsLogs;
-
-        return $this;
-    }
-
-    public function getFileCollections(): Collection
-    {
-        return $this->fileCollections;
-    }
-
-    public static function getDeactivateLastLoginDate(): \DateTime
-    {
-        return new \DateTime('-30 days');
     }
 
     public function getStatus(): string

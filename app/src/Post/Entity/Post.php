@@ -5,16 +5,21 @@ declare(strict_types=1);
 namespace App\Post\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use App\Post\Api\Controller\CreatePostController;
 use App\Post\Repository\PostRepository;
 use App\User\Entity\User;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as Orm;
 use Doctrine\ORM\Mapping\Index;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Count;
+use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[Orm\Entity(repositoryClass: PostRepository::class)]
 #[Orm\Table(name: 'posts')]
@@ -24,6 +29,14 @@ use Symfony\Component\Serializer\Annotation\Groups;
 #[ApiResource(
     collectionOperations: [
         'get',
+        'post' => [
+            'controller' => CreatePostController::class,
+            'denormalization_context' => [
+                'groups' => [
+                    self::GROUP_WRITE,
+                ],
+            ],
+        ],
     ],
     itemOperations: [
         'get',
@@ -51,6 +64,8 @@ class Post
 
     #[Orm\Column(type: Types::STRING, length: 500, nullable: false)]
     #[Groups(self::FULL_GROUPS)]
+    #[NotBlank]
+    #[Length(max: 500)]
     protected string $title;
 
     #[Orm\ManyToOne(targetEntity: User::class)]
@@ -60,18 +75,21 @@ class Post
     #[Orm\Column(type: Types::INTEGER, nullable: false, options: [
         'default' => 0,
     ])]
+    #[Groups([self::GROUP_READ])]
     protected int $rating = 0;
 
     /**
      * @Gedmo\Timestampable(on="create")
      */
     #[Orm\Column(name: 'created_at', type: Types::DATETIME_IMMUTABLE)]
+    #[Groups([self::GROUP_READ])]
     protected DateTimeInterface $createdAt;
 
     /**
      * @Gedmo\Timestampable(on="update")
      */
     #[Orm\Column(name: 'updated_at', type: Types::DATETIME_IMMUTABLE)]
+    #[Groups([self::GROUP_READ])]
     protected ?DateTimeInterface $updatedAt;
 
     #[Orm\OneToMany(
@@ -82,13 +100,13 @@ class Post
     )
     ]
     #[Groups(self::FULL_GROUPS)]
-    protected ArrayCollection $content;
+    #[Count(min: 1, max: 10)]
+    protected Collection $content;
 
-    public function __construct(string $title, User $createdBy)
+    public function __construct(string $title)
     {
         $this->id = Uuid::uuid6()->toString();
         $this->title = $title;
-        $this->createdBy = $createdBy;
         $this->createdAt = new \DateTimeImmutable();
         $this->content = new ArrayCollection();
     }
@@ -113,6 +131,13 @@ class Post
     public function getCreatedBy(): User
     {
         return $this->createdBy;
+    }
+
+    public function setCreatedBy(User $createdBy): self
+    {
+        $this->createdBy = $createdBy;
+
+        return $this;
     }
 
     public function getRating(): int
@@ -144,13 +169,14 @@ class Post
         return $this;
     }
 
-    public function getContent(): ArrayCollection
+    public function getContent(): Collection
     {
         return $this->content;
     }
 
-    public function setContent(ArrayCollection $content): self
+    public function setContent($content): self
     {
+        dump($content); exit();
         $this->content = $content;
 
         return $this;

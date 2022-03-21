@@ -8,6 +8,8 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Ramsey\Uuid\Uuid;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[Orm\Entity]
 #[Orm\Table(name: 'post_content')]
@@ -29,21 +31,23 @@ class Content
     protected Post $post;
 
     #[Orm\Column(name: 'type', type: 'string', nullable: false)]
-    protected string $type;
+    #[Groups(Post::FULL_GROUPS)]
+    #[NotBlank]
+    protected ?string $type = null;
 
     // protected $imageId; // TODO files
 
     #[Orm\Column(name: 'body', type: 'string', nullable: true)]
-    protected ?string $body;
+    #[Groups(Post::FULL_GROUPS)]
+    protected ?string $body = null;
 
     #[Orm\Column(name: 'position', type: 'integer', nullable: false)]
+    #[Groups(Post::FULL_GROUPS)]
     protected int $position = 1;
 
-    public function __construct(Post $post, string $type)
+    public function __construct()
     {
         $this->id = Uuid::uuid6()->toString();
-        $this->post = $post;
-        $this->type = $type;
     }
 
     public function getId(): string

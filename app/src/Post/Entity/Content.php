@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[Orm\Entity]
@@ -33,12 +34,14 @@ class Content
     #[Orm\Column(name: 'type', type: 'string', nullable: false)]
     #[Groups(Post::FULL_GROUPS)]
     #[NotBlank]
+    #[Choice(choices: [self::TYPE_TEXT, self::TYPE_IMAGE])]
     protected ?string $type = null;
 
     // protected $imageId; // TODO files
 
     #[Orm\Column(name: 'body', type: 'string', nullable: true)]
     #[Groups(Post::FULL_GROUPS)]
+    #[NotBlank]
     protected ?string $body = null;
 
     #[Orm\Column(name: 'position', type: 'integer', nullable: false)]

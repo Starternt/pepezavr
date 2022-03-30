@@ -7,15 +7,16 @@ namespace App\Post\Api\Controller;
 use App\Post\Entity\Post;
 use App\User\Entity\User;
 
-class CreatePostController extends AbstractPostController
+final class CreatePostController extends AbstractPostController
 {
     public function __invoke(Post $data): Post
     {
-        dump($data); exit();
         /** @var User $user */
         $user = $this->getUser();
 
         $this->postService->create($data, $user);
+
+        $this->validator->validate($data);
 
         return $data;
     }

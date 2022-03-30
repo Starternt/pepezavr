@@ -20,6 +20,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Valid;
 
 #[Orm\Entity(repositoryClass: PostRepository::class)]
 #[Orm\Table(name: 'posts')]
@@ -101,6 +102,7 @@ class Post
     ]
     #[Groups(self::FULL_GROUPS)]
     #[Count(min: 1, max: 10)]
+    #[Valid]
     protected Collection $content;
 
     public function __construct(string $title)
@@ -176,6 +178,7 @@ class Post
 
     public function addContent(Content $content): self
     {
+        $content->setPost($this);
         $this->content[] = $content;
 
         return $this;

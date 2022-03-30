@@ -18,6 +18,8 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 #[Index(columns: ['type'], name: 'IDX_Type')]
 class Content
 {
+    public const BODY_LENGTH = 15000;
+
     protected const TYPE_TEXT = 'text';
     protected const TYPE_IMAGE = 'image';
     protected const TYPE_VIDEO = 'video';
@@ -39,7 +41,7 @@ class Content
 
     // protected $imageId; // TODO files
 
-    #[Orm\Column(name: 'body', type: 'string', nullable: true)]
+    #[Orm\Column(name: 'body', type: 'string', length: self::BODY_LENGTH, nullable: true)]
     #[Groups(Post::FULL_GROUPS)]
     #[NotBlank]
     protected ?string $body = null;

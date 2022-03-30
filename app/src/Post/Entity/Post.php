@@ -169,15 +169,21 @@ class Post
         return $this;
     }
 
-    public function getContent(): Collection
+    public function getContent(): ArrayCollection|Collection
     {
         return $this->content;
     }
 
-    public function setContent($content): self
+    public function addContent(Content $content): self
     {
-        dump($content); exit();
-        $this->content = $content;
+        $this->content[] = $content;
+
+        return $this;
+    }
+
+    public function removeContent(Content $content): self
+    {
+        $this->content->removeElement($content);
 
         return $this;
     }

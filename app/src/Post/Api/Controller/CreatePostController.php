@@ -11,7 +11,7 @@ class CreatePostController extends AbstractPostController
 {
     public function __invoke(Post $data): Post
     {
-        dump(21); exit();
+        dump($data); exit();
         /** @var User $user */
         $user = $this->getUser();
 

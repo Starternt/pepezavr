@@ -27,18 +27,10 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     use SoftDeleteableEntity;
 
     public const ROLE_DEFAULT = 'ROLE_USER';
-
-    public const ROLE_ACTIVE = 'ROLE_ACTIVE_USER';
-
     public const ROLE_ADMIN = 'ROLE_ADMIN';
-
     public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
 
     public const HASHING_ALGORITHM_ARGON2I = 'argon2i';
-
-    public const HASHING_ALGORITHM_MD5 = 'md5';
-
-    public const HASHING_ALGORITHM_BCRYPT = 'bcrypt';
 
     public const STATUS_NEW = 'new';
     public const STATUS_ACTIVE = 'active';
@@ -55,9 +47,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     private const VALID_HASHING_ALGORITHMS
         = [
-            self::HASHING_ALGORITHM_MD5,
             self::HASHING_ALGORITHM_ARGON2I,
-            self::HASHING_ALGORITHM_BCRYPT,
         ];
 
     /**
@@ -104,7 +94,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
      * @ORM\Column(nullable=true)
      * @Assert\NotBlank()
      */
-    private ?string $name;
+    private ?string $name = null;
 
     /**
      * @ORM\Column(name="registered_at", type="datetime")
@@ -141,7 +131,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     public function __construct()
     {
         $this->hashingAlgorithm = self::HASHING_ALGORITHM_ARGON2I;
-        $this->name = null;
         $this->registeredAt = new \DateTime();
     }
 
@@ -197,7 +186,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
         // we need to make sure to have at least one role
         $roles[] = self::ROLE_DEFAULT;
-        $roles[] = self::ROLE_ACTIVE;
 
         return array_unique($roles);
     }
@@ -271,13 +259,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     public function getName(): ?string
     {
         return $this->name;
-    }
-
-    public function setRegisteredAt(\DateTimeInterface $registeredAt): self
-    {
-        $this->registeredAt = $registeredAt;
-
-        return $this;
     }
 
     public function getRegisteredAt(): \DateTimeInterface

@@ -3,18 +3,10 @@ security:
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        memory:
-            memory:
-                users:
-                    admin: {password: '%env(ADMIN_PASSWORD)%', roles: ['ROLE_SUPER_ADMIN']}
-        entity:
+        app_user_provider:
             entity:
-                class: 'App\User\Entity\User'
-                property: 'username'
-
-        users:
-            chain:
-                providers: ['memory', 'entity']
+                class: App\User\Entity\User
+                property: username
 
     role_hierarchy:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
@@ -22,6 +14,8 @@ security:
     password_hashers:
         App\User\Entity\User:
             algorithm: auto
+        argon2i_encoder:
+            algorithm: argon2i
 
     firewalls:
         dev:
@@ -35,7 +29,7 @@ security:
                 check_path: /admin/login
                 login_path: /admin/login
                 remember_me: true
-                success_handler: admin.authentication_success_handler
+                #success_handler: admin.authentication_success_handler
             logout:
                 path: /admin/logout
                 target: /admin
@@ -55,7 +49,7 @@ security:
             jwt: ~
         main:
             json_login:
-                check_path: /api/access_tokens
+                check_path: /authentication_token
                 username_path: username
                 password_path: password
                 success_handler: lexik_jwt_authentication.handler.authentication_success

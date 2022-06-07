@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Post\Event;
+namespace App\Event;
 
 class CreatePostEvent extends PostEvent
 {

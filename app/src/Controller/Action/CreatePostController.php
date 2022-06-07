@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Post\Api\Controller;
+namespace App\Controller\Action;
 
-use App\Post\Entity\Post;
-use App\User\Entity\User;
+use App\Entity\Post;
+use App\Entity\User;
 
 final class CreatePostController extends AbstractPostController
 {

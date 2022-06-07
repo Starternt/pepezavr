@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Post\Service;
+namespace App\Service;
 
-use App\Post\Entity\Post;
-use App\User\Entity\User;
+use App\Entity\Post;
+use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PostService

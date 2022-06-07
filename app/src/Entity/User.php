@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\User\Entity;
+namespace App\Entity;
 
-use App\User\Repository\UserRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;

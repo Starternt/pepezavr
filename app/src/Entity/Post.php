@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Post\Entity;
+namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Post\Api\Controller\CreatePostController;
-use App\Post\Repository\PostRepository;
-use App\User\Entity\User;
+use App\Controller\Action\CreatePostController;
+use App\Repository\PostRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

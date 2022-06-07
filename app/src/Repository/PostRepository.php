@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Post\Repository;
+namespace App\Repository;
 
-use App\Post\Entity\Post;
+use App\Entity\Post;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry as RegistryInterface;
 

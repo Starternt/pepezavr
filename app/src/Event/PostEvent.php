@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\Post\Event;
+namespace App\Event;
 
-use App\Post\Entity\Post;
+use App\Entity\Post;
 use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class PostEvent extends Event

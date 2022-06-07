@@ -5,14 +5,14 @@ security:
     providers:
         app_user_provider:
             entity:
-                class: App\User\Entity\User
+                class: App\Entity\User
                 property: username
 
     role_hierarchy:
         ROLE_SUPER_ADMIN: ROLE_ADMIN
 
     password_hashers:
-        App\User\Entity\User:
+        App\Entity\User:
             algorithm: auto
         argon2i_encoder:
             algorithm: argon2i

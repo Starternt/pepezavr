@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\Action\CreatePostController;
+use App\Controller\Action\CreatePostAction;
 use App\Repository\PostRepository;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,7 +30,7 @@ use Symfony\Component\Validator\Constraints\Valid;
     collectionOperations: [
         'get',
         'post' => [
-            'controller' => CreatePostController::class,
+            'controller' => CreatePostAction::class,
             'denormalization_context' => [
                 'groups' => [
                     self::GROUP_WRITE,

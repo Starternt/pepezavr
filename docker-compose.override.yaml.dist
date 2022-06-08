@@ -73,6 +73,8 @@ services:
 
   minio:
     image: 'bitnami/minio:latest'
+    volumes:
+      - s3:/data
     ports:
       - '9000:9000'
       - '9001:9001'
@@ -87,6 +89,7 @@ volumes:
   composer:
   postgres:
   sessions:
+  s3:
 
 networks:
   # Xdebug config

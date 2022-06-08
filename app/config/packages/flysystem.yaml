@@ -4,6 +4,5 @@ flysystem:
       adapter: 'aws'
       # visibility: public # Make the uploaded file publicly accessible in S3
       options:
-        client: 'aws_client_service' # The service ID of the Aws\S3\S3Client instance
-        bucket: 'my-first-bucket'
-        prefix: 'optional/path/prefix'
+        client: 'Aws\S3\S3Client' # The service ID of the Aws\S3\S3Client instance
+        bucket: '%env(AWS_S3_BUCKET_NAME)%'

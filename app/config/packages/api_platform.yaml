@@ -5,6 +5,7 @@ api_platform:
       - '%kernel.project_dir%/src/DTO'
   patch_formats:
     json: ['application/merge-patch+json', 'application/json']
+    multipart: ['multipart/form-data']
   swagger:
     versions: [3]
   eager_loading:

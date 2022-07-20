@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 
+// TODO delete this method. Created only for tests
 final class CreateFileAction extends AbstractController
 {
     public function __construct(private FilesystemOperator $usersStorage, private S3Client $s3Client, $min)

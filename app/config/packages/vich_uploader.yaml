@@ -1,0 +1,10 @@
+vich_uploader:
+  db_driver: orm
+  storage: flysystem
+  metadata:
+    type: attribute
+  mappings:
+    content_image:
+      uri_prefix: '/%env(AWS_S3_BUCKET_NAME)%'
+      upload_destination: users.storage # Use the name you defined for your storage here
+      namer: Vich\UploaderBundle\Naming\SmartUniqueNamer

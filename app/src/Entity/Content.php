@@ -11,6 +11,7 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use ApiPlatform\Core\Annotation\ApiProperty;
 
 #[Orm\Entity]
 #[Orm\Table(name: 'post_content')]
@@ -39,7 +40,10 @@ class Content
     #[Choice(choices: [self::TYPE_TEXT, self::TYPE_IMAGE])]
     protected ?string $type = null;
 
-    // protected $imageId; // TODO files
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ApiProperty(iri: 'http://schema.org/image')]
+    public ?MediaObject $image = null;
 
     #[Orm\Column(name: 'body', type: 'string', length: self::BODY_LENGTH, nullable: true)]
     #[Groups(Post::FULL_GROUPS)]
@@ -104,6 +108,18 @@ class Content
     public function setPosition(int $position): self
     {
         $this->position = $position;
+
+        return $this;
+    }
+
+    public function getImage(): ?MediaObject
+    {
+        return $this->image;
+    }
+
+    public function setImage(?MediaObject $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }

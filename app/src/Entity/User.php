@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Gedmo\SoftDeleteable\Traits\SoftDeleteableEntity;
@@ -15,13 +16,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * @ORM\Table(
- *     name="users"
- * )
- * @ORM\Entity(repositoryClass=UserRepository::class)
- * @UniqueEntity("username")
  * @Gedmo\SoftDeleteable(fieldName="deletedAt")
  */
+#[Orm\Entity(repositoryClass: UserRepository::class)]
+#[Orm\Table(name: 'users')]
+#[UniqueEntity("username")]
 class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInterface, UserInterface
 {
     use SoftDeleteableEntity;
@@ -50,82 +49,47 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
             self::HASHING_ALGORITHM_ARGON2I,
         ];
 
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id, ORM\Column(type: "integer"), ORM\GeneratedValue]
     private ?int $id = null;
 
-    /**
-     * @ORM\Column(type="string", length=180, unique=true)
-     * @Assert\NotBlank()
-     */
+    #[Orm\Column(type: Types::STRING, length: 180, unique: true, nullable: false)]
+    #[Assert\NotBlank]
     private string $username = '';
 
-    /**
-     * @ORM\Column(name="email", type="string", length=180)
-     * @Assert\NotBlank()
-     */
+    #[Orm\Column(type: Types::STRING, length: 180, nullable: true)]
+    #[Assert\NotBlank]
     private string $email = '';
 
     /**
-     * @ORM\Column(type="array")
-     *
      * @var string[]
      */
+    #[Orm\Column(type: Types::ARRAY)]
     private array $roles = [];
 
-    /**
-     * Encrypted password. Must be persisted.
-     *
-     * @ORM\Column(type="string")
-     */
+    #[Orm\Column(type: Types::STRING, length: 100, nullable: false)]
     private string $password = '';
 
-    /**
-     * @ORM\Column(name="last_login", type="datetime", nullable=true)
-     */
+    #[Orm\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastLogin = null;
 
     private ?string $plainPassword = null;
 
-    /**
-     * @ORM\Column(nullable=true)
-     * @Assert\NotBlank()
-     */
-    private ?string $name = null;
-
-    /**
-     * @ORM\Column(name="registered_at", type="datetime")
-     */
+    #[Orm\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private \DateTimeInterface $registeredAt;
 
-    /**
-     * @ORM\Column(name="updated_at", type="datetime", nullable=true)
-     */
+    #[Orm\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    /**
-     * @ORM\Column(name="hashing_algorithm", type="string", nullable=false,
-     *     options={"default": User::HASHING_ALGORITHM_ARGON2I}
-     * )
-     */
+    #[Orm\Column(type: Types::STRING, length: 100, nullable: false, options: ['default' => User::HASHING_ALGORITHM_ARGON2I])]
     private string $hashingAlgorithm;
 
-    /**
-     * @ORM\Column(type="string", nullable=true)
-     */
+    #[Orm\Column(type: Types::STRING, length: 15, nullable: true)]
     private ?string $phone = null;
 
-    /**
-     * @ORM\Column(type="boolean", options={"default": false})
-     */
+    #[Orm\Column(type: Types::BOOLEAN, nullable: false, options: ['default' => false])]
     private bool $confirmed = false;
 
-    /**
-     * @ORM\Column(type="string", options={"default"=self::STATUS_NEW})
-     */
+    #[Orm\Column(type: Types::STRING, nullable: false, options: ['default' => self::STATUS_NEW])]
     private string $status = self::STATUS_NEW;
 
     public function __construct()

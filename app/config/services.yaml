@@ -16,6 +16,8 @@ services:
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
+        bind:
+            $min: "%env(MINIO_URL)%"
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
@@ -34,13 +36,13 @@ services:
     Aws\S3\S3Client:
         arguments:
             -
-                version: 'latest' # or 'latest'
-                region: "eu-central-1" # 'eu-central-1' for example
-                endpoint: 'http://192.168.200.2:9000'
-                scheme: 'http'
+                version: 'latest'
+                region: '%env(AWS_S3_REGION)%' # 'eu-central-1' for example
+                endpoint: '%env(AWS_S3_ENDPOINT)%'
+                scheme: '%env(AWS_S3_SCHEME)%'
                 credentials:
-                    key: "rXPlZ74yvRJUyKms"
-                    secret: "Aah3Qd3oh5PEmBCZD6VvVAyzKN24FbT3"
+                    key: "%env(AWS_S3_ACCESS_ID)%"
+                    secret: "%env(AWS_S3_ACCESS_SECRET)%"
 
     gedmo.listener.softdeleteable:
         class: Gedmo\SoftDeleteable\SoftDeleteableListener

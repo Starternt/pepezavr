@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class CreateFileAction extends AbstractController
 {
-    public function __construct(private FilesystemOperator $usersStorage, private S3Client $s3Client)
+    public function __construct(private FilesystemOperator $usersStorage, private S3Client $s3Client, $min)
     {
     }
 
@@ -56,7 +56,7 @@ final class CreateFileAction extends AbstractController
         // dump(1); exit();
 
 
-        dump($this->usersStorage->fileExists('file.pdf')); exit();
+        // dump($this->usersStorage->fileExists('file.pdf')); exit();
 
 
 

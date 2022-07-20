@@ -72,6 +72,7 @@ services:
       - internal
 
   minio:
+    container_name: ${DOCKER_PROJECT_TITLE}-minio
     image: 'bitnami/minio:latest'
     volumes:
       - s3:/data
@@ -81,7 +82,7 @@ services:
     environment:
       - MINIO_ROOT_USER=root
       - MINIO_ROOT_PASSWORD=password
-      - MINIO_DEFAULT_BUCKETS=my-first-bucket:policy,my-second-bucket
+      - MINIO_DEFAULT_BUCKETS=content-bucket:policy,test-bucket
     networks:
       - internal
 

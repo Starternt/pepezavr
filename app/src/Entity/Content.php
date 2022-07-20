@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\ORM\Mapping\Index;
@@ -11,7 +12,6 @@ use Ramsey\Uuid\Uuid;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints\Choice;
 use Symfony\Component\Validator\Constraints\NotBlank;
-use ApiPlatform\Core\Annotation\ApiProperty;
 
 #[Orm\Entity]
 #[Orm\Table(name: 'post_content')]
@@ -23,7 +23,12 @@ class Content
 
     protected const TYPE_TEXT = 'text';
     protected const TYPE_IMAGE = 'image';
-    protected const TYPE_VIDEO = 'video';
+
+    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    #[ApiProperty(iri: 'http://schema.org/image')]
+    #[Groups(Post::FULL_GROUPS)]
+    public ?MediaObject $image = null;
 
     #[Orm\Column(type: Types::GUID)]
     #[Orm\Id]
@@ -39,11 +44,6 @@ class Content
     #[NotBlank]
     #[Choice(choices: [self::TYPE_TEXT, self::TYPE_IMAGE])]
     protected ?string $type = null;
-
-    #[ORM\ManyToOne(targetEntity: MediaObject::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    #[ApiProperty(iri: 'http://schema.org/image')]
-    public ?MediaObject $image = null;
 
     #[Orm\Column(name: 'body', type: 'string', length: self::BODY_LENGTH, nullable: true)]
     #[Groups(Post::FULL_GROUPS)]

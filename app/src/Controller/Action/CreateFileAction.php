@@ -5,18 +5,11 @@ declare(strict_types=1);
 namespace App\Controller\Action;
 
 use App\Entity\Post;
-use App\Entity\User;
-use App\Service\PostService;
 use Aws\S3\S3Client;
-use League\Flysystem\AwsS3V3\AwsS3V3Adapter;
-use League\Flysystem\AwsS3V3\PortableVisibilityConverter;
-use League\Flysystem\Filesystem;
 use League\Flysystem\FilesystemOperator;
-use League\Flysystem\Visibility;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 final class CreateFileAction extends AbstractController
 {
@@ -26,6 +19,7 @@ final class CreateFileAction extends AbstractController
 
     public function __invoke(Request $request): Post
     {
+        exit;
         /** @var UploadedFile $file */
         $file = $request->files->get('file');
 
@@ -55,18 +49,11 @@ final class CreateFileAction extends AbstractController
         // );
         // dump(1); exit();
 
-
         // dump($this->usersStorage->fileExists('file.pdf')); exit();
 
-
-
-
-        $this->usersStorage->writeStream(
-            $path,
-            $stream
-        );
-
-
-        dump('end'); exit();
+        // $this->usersStorage->writeStream(
+        //     $path,
+        //     $stream
+        // );
     }
 }

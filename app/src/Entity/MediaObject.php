@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiProperty;
@@ -45,10 +47,6 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 )]
 class MediaObject
 {
-    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
-    #[Groups(['media_object:read'])]
-    private ?int $id = null;
-
     #[ApiProperty(iri: 'http://schema.org/contentUrl')]
     #[Groups(['media_object:read'])]
     public ?string $contentUrl = null;
@@ -59,6 +57,9 @@ class MediaObject
 
     #[ORM\Column(nullable: true)]
     public ?string $filePath = null;
+    #[ORM\Id, ORM\Column, ORM\GeneratedValue]
+    #[Groups(['media_object:read'])]
+    private ?int $id = null;
 
     public function getId(): ?int
     {

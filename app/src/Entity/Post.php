@@ -42,7 +42,7 @@ use Symfony\Component\Validator\Constraints\Valid;
             'controller' => CreateFileAction::class,
             'method' => 'POST',
             'path' => '/test',
-            "deserialize" => false,
+            'deserialize' => false,
             'openapi_context' => [
                 'requestBody' => [
                     'content' => [
@@ -124,7 +124,7 @@ class Post
     )
     ]
     #[Groups(self::FULL_GROUPS)]
-    #[Count(min: 1, max: 10)]
+    #[count(min: 1, max: 10)]
     #[Valid]
     protected Collection $content;
 

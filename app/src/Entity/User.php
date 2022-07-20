@@ -20,7 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 #[Orm\Entity(repositoryClass: UserRepository::class)]
 #[Orm\Table(name: 'users')]
-#[UniqueEntity("username")]
+#[UniqueEntity('username')]
 class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInterface, UserInterface
 {
     use SoftDeleteableEntity;
@@ -38,8 +38,8 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     public const STATUSES
         = [
-            self::STATUS_NEW     => 'New',
-            self::STATUS_ACTIVE  => 'Active',
+            self::STATUS_NEW => 'New',
+            self::STATUS_ACTIVE => 'Active',
             self::STATUS_DELETED => 'Deleted',
             self::STATUS_BLOCKED => 'Blocked',
         ];
@@ -49,7 +49,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
             self::HASHING_ALGORITHM_ARGON2I,
         ];
 
-    #[ORM\Id, ORM\Column(type: "integer"), ORM\GeneratedValue]
+    #[ORM\Id, ORM\Column(type: 'integer'), ORM\GeneratedValue]
     private ?int $id = null;
 
     #[Orm\Column(type: Types::STRING, length: 180, unique: true, nullable: false)]
@@ -80,7 +80,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     #[Orm\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $updatedAt = null;
 
-    #[Orm\Column(type: Types::STRING, length: 100, nullable: false, options: ['default' => User::HASHING_ALGORITHM_ARGON2I])]
+    #[Orm\Column(type: Types::STRING, length: 100, nullable: false, options: ['default' => self::HASHING_ALGORITHM_ARGON2I])]
     private string $hashingAlgorithm;
 
     #[Orm\Column(type: Types::STRING, length: 15, nullable: true)]
@@ -211,7 +211,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
         return $this;
     }
-
 
     public function setName(?string $name): self
     {

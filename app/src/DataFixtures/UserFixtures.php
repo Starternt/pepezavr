@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\DataFixtures;
 
 use App\Entity\User;
@@ -25,7 +27,8 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 ->setHashingAlgorithm($userData['hashing_algorithm'])
                 ->setPhone($userData['phone'])
                 ->setConfirmed($userData['confirmed'])
-                ->setStatus($userData['status']);
+                ->setStatus($userData['status'])
+            ;
             $user->setPassword($this->hasher->hashPassword($user, $userData['password']));
 
             if (!empty($userData['roles'])) {
@@ -45,64 +48,64 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
 
         return [
             [
-                'username'          => 'admin',
-                'email'             => 'admin@admin.com',
-                'password'          => '123',
-                'name'              => 'The boss',
-                'roles'             => ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'],
-                'updated_at'        => $currentDateTime,
+                'username' => 'admin',
+                'email' => 'admin@admin.com',
+                'password' => '123',
+                'name' => 'The boss',
+                'roles' => ['ROLE_ADMIN', 'ROLE_SUPER_ADMIN'],
+                'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
-                'phone'             => '+143900500100',
-                'confirmed'         => true,
-                'status'            => User::STATUS_ACTIVE,
+                'phone' => '+143900500100',
+                'confirmed' => true,
+                'status' => User::STATUS_ACTIVE,
             ],
             [
-                'username'          => 'user',
-                'email'             => 'user@admin.com',
-                'password'          => '123',
-                'name'              => 'John Wick',
-                'roles'             => [],
-                'updated_at'        => $currentDateTime,
+                'username' => 'user',
+                'email' => 'user@admin.com',
+                'password' => '123',
+                'name' => 'John Wick',
+                'roles' => [],
+                'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
-                'phone'             => '+143900500101',
-                'confirmed'         => true,
-                'status'            => User::STATUS_ACTIVE,
+                'phone' => '+143900500101',
+                'confirmed' => true,
+                'status' => User::STATUS_ACTIVE,
             ],
             [
-                'username'          => 'new_user',
-                'email'             => 'new_user@admin.com',
-                'password'          => '123',
-                'name'              => 'Pepe the frog',
-                'roles'             => [],
-                'updated_at'        => $currentDateTime,
+                'username' => 'new_user',
+                'email' => 'new_user@admin.com',
+                'password' => '123',
+                'name' => 'Pepe the frog',
+                'roles' => [],
+                'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
-                'phone'             => '+143900500102',
-                'confirmed'         => false,
-                'status'            => User::STATUS_NEW,
+                'phone' => '+143900500102',
+                'confirmed' => false,
+                'status' => User::STATUS_NEW,
             ],
             [
-                'username'          => 'user_blocked',
-                'email'             => 'user_blocked@admin.com',
-                'password'          => '123',
-                'name'              => 'Leonardo DiCaprio',
-                'roles'             => [],
-                'updated_at'        => $currentDateTime,
+                'username' => 'user_blocked',
+                'email' => 'user_blocked@admin.com',
+                'password' => '123',
+                'name' => 'Leonardo DiCaprio',
+                'roles' => [],
+                'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
-                'phone'             => '+143900500103',
-                'confirmed'         => true,
-                'status'            => User::STATUS_BLOCKED,
+                'phone' => '+143900500103',
+                'confirmed' => true,
+                'status' => User::STATUS_BLOCKED,
             ],
             [
-                'username'          => 'deleted_user',
-                'email'             => 'deleted_user@admin.com',
-                'password'          => '123',
-                'name'              => 'Not important',
-                'roles'             => [],
-                'updated_at'        => $currentDateTime,
+                'username' => 'deleted_user',
+                'email' => 'deleted_user@admin.com',
+                'password' => '123',
+                'name' => 'Not important',
+                'roles' => [],
+                'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
-                'phone'             => '+143900500104',
-                'confirmed'         => true,
-                'status'            => User::STATUS_DELETED,
+                'phone' => '+143900500104',
+                'confirmed' => true,
+                'status' => User::STATUS_DELETED,
             ],
         ];
     }

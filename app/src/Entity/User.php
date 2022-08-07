@@ -27,7 +27,13 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     public const ROLE_DEFAULT = 'ROLE_USER';
     public const ROLE_ADMIN = 'ROLE_ADMIN';
-    public const ROLE_SUPER_ADMIN = 'ROLE_SUPER_ADMIN';
+    public const ROLE_MODERATOR = 'ROLE_MODERATOR';
+
+    public const ROLES = [
+        self::ROLE_DEFAULT => 'User',
+        self::ROLE_ADMIN => 'Admin',
+        self::ROLE_MODERATOR => 'Moderator',
+    ];
 
     public const HASHING_ALGORITHM_ARGON2I = 'argon2i';
 
@@ -72,9 +78,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     #[Orm\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $lastLogin = null;
 
-    private ?string $plainPassword = null;
-
-    #[Orm\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Orm\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private \DateTimeInterface $registeredAt;
 
     #[Orm\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
@@ -92,6 +96,8 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     #[Orm\Column(type: Types::STRING, nullable: false, options: ['default' => self::STATUS_NEW])]
     private string $status = self::STATUS_NEW;
 
+    private ?string $plainPassword = null;
+
     public function __construct()
     {
         $this->hashingAlgorithm = self::HASHING_ALGORITHM_ARGON2I;
@@ -100,7 +106,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     public function __toString(): string
     {
-        return sprintf('%s (%s)', $this->name, $this->username);
+        return sprintf('%s', $this->username);
     }
 
     public function getId(): ?int
@@ -185,7 +191,7 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
 
     public function isAdmin(): bool
     {
-        return !empty(array_intersect($this->getRoles(), [self::ROLE_ADMIN, self::ROLE_SUPER_ADMIN]));
+        return !empty(array_intersect($this->getRoles(), [self::ROLE_ADMIN]));
     }
 
     public function getSalt(): ?string
@@ -198,30 +204,6 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
         $this->plainPassword = null;
 
         return $this;
-    }
-
-    public function getPlainPassword(): ?string
-    {
-        return $this->plainPassword;
-    }
-
-    public function setPlainPassword(?string $plainPassword): self
-    {
-        $this->plainPassword = $plainPassword;
-
-        return $this;
-    }
-
-    public function setName(?string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
     }
 
     public function getRegisteredAt(): \DateTimeInterface
@@ -319,6 +301,18 @@ class User implements PasswordAuthenticatedUserInterface, PasswordHasherAwareInt
     public function setStatus(string $status): self
     {
         $this->status = $status;
+
+        return $this;
+    }
+
+    public function getPlainPassword(): ?string
+    {
+        return $this->plainPassword;
+    }
+
+    public function setPlainPassword(?string $plainPassword): self
+    {
+        $this->plainPassword = $plainPassword;
 
         return $this;
     }

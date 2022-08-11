@@ -22,7 +22,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
             $user = (new User())
                 ->setUsername($userData['username'])
                 ->setEmail($userData['email'])
-                ->setName($userData['name'])
                 ->setUpdatedAt($userData['updated_at'])
                 ->setHashingAlgorithm($userData['hashing_algorithm'])
                 ->setPhone($userData['phone'])
@@ -51,7 +50,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 'username' => 'admin',
                 'email' => 'admin@admin.com',
                 'password' => '123',
-                'name' => 'admin',
                 'roles' => [User::ROLE_ADMIN],
                 'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
@@ -63,7 +61,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 'username' => 'user',
                 'email' => 'user@admin.com',
                 'password' => '123',
-                'name' => 'user',
                 'roles' => [],
                 'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
@@ -75,7 +72,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 'username' => 'new_user',
                 'email' => 'new_user@admin.com',
                 'password' => '123',
-                'name' => 'new_user',
                 'roles' => [],
                 'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
@@ -87,7 +83,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 'username' => 'user_blocked',
                 'email' => 'user_blocked@admin.com',
                 'password' => '123',
-                'name' => 'user_blocked',
                 'roles' => [],
                 'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
@@ -99,7 +94,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 'username' => 'deleted_user',
                 'email' => 'deleted_user@admin.com',
                 'password' => '123',
-                'name' => 'deleted_user',
                 'roles' => [],
                 'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,
@@ -111,7 +105,6 @@ class UserFixtures extends Fixture implements ORMFixtureInterface
                 'username' => 'moderator',
                 'email' => 'moderator@admin.com',
                 'password' => '123',
-                'name' => 'moderator',
                 'roles' => [User::ROLE_MODERATOR],
                 'updated_at' => $currentDateTime,
                 'hashing_algorithm' => User::HASHING_ALGORITHM_ARGON2I,

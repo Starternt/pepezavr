@@ -15,9 +15,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
-/**
- * @Gedmo\SoftDeleteable(fieldName="deletedAt")
- */
+#[Gedmo\SoftDeleteable(fieldName: 'deletedAt')]
 #[Orm\Entity(repositoryClass: UserRepository::class)]
 #[Orm\Table(name: 'users')]
 #[UniqueEntity('username')]

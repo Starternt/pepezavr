@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
-use App\Controller\Action\CreateFileAction;
 use App\Controller\Action\CreatePostAction;
 use App\Repository\PostRepository;
 use DateTimeInterface;
@@ -35,29 +34,6 @@ use Symfony\Component\Validator\Constraints\Valid;
             'denormalization_context' => [
                 'groups' => [
                     self::GROUP_WRITE,
-                ],
-            ],
-        ],
-        'postTest' => [
-            'controller' => CreateFileAction::class,
-            'method' => 'POST',
-            'path' => '/test',
-            'deserialize' => false,
-            'openapi_context' => [
-                'requestBody' => [
-                    'content' => [
-                        'multipart/form-data' => [
-                            'schema' => [
-                                'type' => 'object',
-                                'properties' => [
-                                    'file' => [
-                                        'type' => 'string',
-                                        'format' => 'binary',
-                                    ],
-                                ],
-                            ],
-                        ],
-                    ],
                 ],
             ],
         ],

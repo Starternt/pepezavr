@@ -18,25 +18,11 @@ doctrine:
                 connection: default
                 naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
                 mappings:
-                    App\User:
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/User/Entity'
-                        prefix: 'App\User\Entity'
-                        alias: App
-                    App\Auth:
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Auth/Entity'
-                        prefix: 'App\Auth\Entity'
-                        alias: App
-                    App\Post:
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/Post/Entity'
-                        prefix: 'App\Post\Entity'
-                        alias: App
-                    App\File:
-                        type: annotation
-                        dir: '%kernel.project_dir%/src/File/Entity'
-                        prefix: 'App\File\Entity'
+                    App:
+                        is_bundle: false
+                        type: attribute
+                        dir: '%kernel.project_dir%/src/Entity'
+                        prefix: 'App\Entity'
                         alias: App
                     loggable:
                         type: annotation

@@ -3,63 +3,58 @@ security:
     enable_authenticator_manager: true
     # https://symfony.com/doc/current/security.html#where-do-users-come-from-user-providers
     providers:
-        memory:
-            memory:
-                users:
-                    admin: {password: '%env(ADMIN_PASSWORD)%', roles: ['ROLE_SUPER_ADMIN']}
-        entity:
+        app_user_provider:
             entity:
-                class: 'App\User\Entity\User'
-                property: 'username'
-
-        users:
-            chain:
-                providers: ['memory', 'entity']
+                class: App\Entity\User
+                property: username
 
     role_hierarchy:
-        ROLE_SUPER_ADMIN: ROLE_ADMIN
+        ROLE_ADMIN: ROLE_MODERATOR
 
     password_hashers:
-        md5_encoder:
-            algorithm: md5
-            encode_as_base64: false
-            iterations: 0
+        App\Entity\User:
+            algorithm: auto
         argon2i_encoder:
             algorithm: argon2i
-        bcrypt_encoder:
-            algorithm: bcrypt
-            cost: 10
-        Symfony\Component\Security\Core\User\InMemoryUser:
-            algorithm: md5
-            encode_as_base64: false
-            iterations: 0
 
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         admin:
             pattern: ^/admin
-            provider: users
+            provider: app_user_provider
             form_login:
                 default_target_path: /admin
                 check_path: /admin/login
                 login_path: /admin/login
                 remember_me: true
+                success_handler: admin.authentication_success_handler
             logout:
                 path: /admin/logout
                 target: /admin
-
+                delete_cookies:
+                    '%env(COOKIE_NAME)%':
+                        path: null
+                        domain: '%env(COOKIE_DOMAIN)%'
+                    SFSESSID:
+                        path: null
+                        domain: '%env(COOKIE_DOMAIN)%'
+            jwt: ~
+            entry_point: form_login
+        api:
+            pattern: ^/api/
+            stateless: true
+            provider: app_user_provider
+            jwt: ~
         main:
-            provider: users
-            custom_authenticators:
-                - App\Auth\Security\DevUserAuthenticator
-                - App\Auth\Security\AccessTokenAuthenticator
             json_login:
-                check_path: /api/access_tokens
+                check_path: /authentication_token
                 username_path: username
                 password_path: password
+                success_handler: lexik_jwt_authentication.handler.authentication_success
+                failure_handler: lexik_jwt_authentication.handler.authentication_failure
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -70,12 +65,10 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
-        - { path: ^/api/1c/docs, roles: PUBLIC_ACCESS }
         - { path: ^/api/graphql, roles: PUBLIC_ACCESS }
         - { path: ^/api/users/restore_password, roles: PUBLIC_ACCESS }
         - { path: ^/api/users/change_password, roles: PUBLIC_ACCESS }
         - { path: ^/api/users/register, roles: PUBLIC_ACCESS }
-        - { path: ^/api/access_tokens, roles: PUBLIC_ACCESS, methods: [POST] }
-        - { path: ^/api, roles: ROLE_ACTIVE_USER }
+        - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
         - { path: ^/admin/login, roles: PUBLIC_ACCESS }
-        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/admin, roles: ROLE_MODERATOR }

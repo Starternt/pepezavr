@@ -8,7 +8,7 @@ use App\Entity\Post;
 use App\Entity\User;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class PostService
+final class PostService
 {
     public function __construct(private EventDispatcherInterface $eventDispatcher)
     {
